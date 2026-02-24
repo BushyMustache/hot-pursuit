@@ -130,6 +130,7 @@ class Player {
         }
         // TODO: Add logic for up and down
         // Star wave 3
+        
 
         bounding_box = create_bounding_box(sprite, size);
     }
