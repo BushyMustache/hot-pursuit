@@ -129,6 +129,7 @@ class Player {
             sprite.set_x(sprite.x() - speed);
         }
         // TODO: Add logic for up and down
+        // Star wave 3
 
         bounding_box = create_bounding_box(sprite, size);
     }
@@ -138,6 +139,18 @@ class Player {
     bn::fixed speed;       // The speed of the player
     bn::size size;         // The width and height of the sprite
     bn::rect bounding_box; // The rectangle around the sprite for checking collision
+};
+
+class Enemy {
+    public:
+        Enemy(int starting_x, int starting_y, bn::size enemy_size):
+            sprite(bn::sprite_items::dot.create_sprite(starting_x, starting_y)),
+            size(enemy_size)
+    {}
+    bn::sprite_ptr sprite;
+    bn::size size;
+    bn::rect boundingBox;
+
 };
 
 int main()
@@ -150,6 +163,9 @@ int main()
     // Create a player and initialize it
     // TODO: we will move the initialization logic to a constructor.
     Player player = Player(44, 22, 1.5, PLAYER_SIZE);
+
+    // Enemy instance
+    Enemy enemy = Enemy(34, 22, ENEMY_SIZE);
 
     bn::sprite_ptr enemy_sprite = bn::sprite_items::square.create_sprite(-30, 22);
     bn::rect enemy_bounding_box = create_bounding_box(enemy_sprite, ENEMY_SIZE);
