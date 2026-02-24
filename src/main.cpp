@@ -52,6 +52,7 @@ bn::rect create_bounding_box(bn::sprite_ptr sprite, bn::size box_size) {
 class ScoreDisplay {
     public:
         ScoreDisplay() :
+        // initializer list 
             score(0), // Start score at 0
             high_score(0), // Start high score at 0
             score_sprites(bn::vector<bn::sprite_ptr, MAX_SCORE_CHARS>()), // Start with empty vector for score sprites
@@ -126,6 +127,7 @@ int main() {
     bn::core::init();
 
     // Create a new score display
+    // also calling the constructor ScoreDisplay();
     ScoreDisplay scoreDisplay = ScoreDisplay();
 
     // Create a player and initialize it
