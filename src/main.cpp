@@ -6,6 +6,7 @@
 #include <bn_sprite_text_generator.h>
 
 #include "common_fixed_8x16_font.h"
+#include "bn_sprite_items_dot.h"
 
 // Width and height of the the player bounding box
 static constexpr bn::size PLAYER_SIZE = {8, 8};
@@ -81,11 +82,27 @@ class ScoreDisplay {
         bn::sprite_text_generator text_generator; // Text generator for scores
 };
 
+class Player {
+    public:
+        Player(int starting_x, int starting_y) :
+            sprite(bn::sprite_items::dot.create_sprite(starting_x, starting_y)) {
+        }
+
+        void update() {
+            if()
+        }
+
+        bn::sprite_ptr sprite;
+        bn::rect bounding_box;
+};
+
 int main() {
     bn::core::init();
 
     // Create a new score display
     ScoreDisplay scoreDisplay = ScoreDisplay();
+
+    Player player = Player(44, 22);
 
     while(true) {
         // Reset the current score if A is pressed
