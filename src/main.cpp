@@ -9,9 +9,11 @@
 
 #include "common_fixed_8x16_font.h"
 #include "bn_sprite_items_dot.h"
+#include "bn_sprite_items_square.h"
 
 // Width and height of the the player bounding box
 static constexpr bn::size PLAYER_SIZE = {8, 8};
+static constexpr bn::size ENEMY_SIZE = {8, 8};
 
 static constexpr int MIN_Y = -bn::display::height() / 2;
 static constexpr int MAX_Y = bn::display::height() / 2;
@@ -38,7 +40,7 @@ bn::rect create_bounding_box(bn::sprite_ptr sprite, bn::size box_size) {
     return bn::rect(sprite.x().round_integer(),
                     sprite.y().round_integer(),
                     box_size.width(),
-                    box_size.height)();
+                    box_size.height());
 }
 
 /**
@@ -98,16 +100,26 @@ class ScoreDisplay {
 
 class Player {
     public:
-        Player(int starting_x, int starting_y) :
-            sprite(bn::sprite_items::dot.create_sprite(starting_x, starting_y)) {
+        Player(int starting_x, int starting_y, bn::size player_size) :
+            sprite(bn::sprite_items::dot.create_sprite(starting_x, starting_y)),
+            size(player_size) {
         }
 
         void update() {
-            if()
+            if(bn::keypad::right_held()) {
+                sprite.set_x(sprite.x() + 2);
+            }
+            if(bn::keypad::left_held()) {
+                sprite.set_x(sprite.x() - 2);
+            }
+            // TODO: Add logic for up and down
+
+            bounding_box = create_bounding_box(sprite, size);
         }
 
         bn::sprite_ptr sprite;
         bn::rect bounding_box;
+        bn::size size;
 };
 
 int main() {
@@ -116,16 +128,24 @@ int main() {
     // Create a new score display
     ScoreDisplay scoreDisplay = ScoreDisplay();
 
-    Player player = Player(44, 22);
+    Player player = Player(44, 22, PLAYER_SIZE);
+
+    bn::sprite_ptr enemy_sprite = bn::sprite_items::square.create_sprite(-30, 22);
+    bn::rect enemy_bounding_box = create_bounding_box(enemy_sprite, ENEMY_SIZE);
 
     while(true) {
-        // Reset the current score if A is pressed
-        if(bn::keypad::a_pressed()) {
+        player.update();
+
+        // Reset the current score and player position if the player collides with enemy
+        if(enemy_bounding_box.intersects(player.bounding_box)) {
             scoreDisplay.resetScore();
+            player.sprite.set_x(44);
+            player.sprite.set_y(22);
         }
 
         // Update the scores and disaply them
         scoreDisplay.update();
+        
 
         bn::core::update();
     }
