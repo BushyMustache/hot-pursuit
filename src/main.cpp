@@ -53,7 +53,7 @@ bn::rect create_bounding_box(bn::sprite_ptr sprite, bn::size box_size)
 class ScoreDisplay
 {
 public:
-    ScoreDisplay() : score(0),                                                                 // Start score at 0
+    ScoreDisplay() : score(0),                                                    // Start score at 0
         high_score(0),                                                            // Start high score at 0
         score_sprites(bn::vector<bn::sprite_ptr, MAX_SCORE_CHARS>()),             // Start with empty vector for score sprites
         text_generator(bn::sprite_text_generator(common::fixed_8x16_sprite_font)) // Use a new text generator
@@ -129,8 +129,7 @@ class Player {
             sprite.set_x(sprite.x() - speed);
         }
         // TODO: Add logic for up and down
-        // Star wave 3
-         if (bn::keypad::up_held())
+        if (bn::keypad::up_held())
         {
             sprite.set_y(sprite.y() - speed);
         }
@@ -173,7 +172,7 @@ int main()
     // TODO: we will move the initialization logic to a constructor.
     Player player = Player(44, 22, 1.5, PLAYER_SIZE);
 
-    // Enemy instance
+    // Create a enemy and initialize it
     Enemy enemy = Enemy(-30, 22, ENEMY_SIZE);
 
     // bn::sprite_ptr enemy_sprite = bn::sprite_items::square.create_sprite(-30, 22);
