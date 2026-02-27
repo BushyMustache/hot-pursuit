@@ -247,18 +247,26 @@ int main()
     while (true)
     {
         player.update();
-
+        // for each loop to access enemies and updates
         for( Enemy opponent : enemies) {
               opponent.update(player);
-        }
 
-        // Reset the current score and player position if the player collides with enemy
-        if (enemy.bounding_box.intersects(player.bounding_box))
+               if (opponent.bounding_box.intersects(player.bounding_box))
         {
             scoreDisplay.resetScore();
             player.sprite.set_x(44);
             player.sprite.set_y(22);
         }
+        
+        }
+
+        // Reset the current score and player position if the player collides with enemy
+        // if (enemy.bounding_box.intersects(player.bounding_box))
+        // {
+        //     scoreDisplay.resetScore();
+        //     player.sprite.set_x(44);
+        //     player.sprite.set_y(22);
+        // }
 
         // Update the scores and disaply them
         scoreDisplay.update();
