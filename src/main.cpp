@@ -217,6 +217,7 @@ int main()
 {
     bn::core::init();
 
+
     // Create a new score display
     ScoreDisplay scoreDisplay = ScoreDisplay();
 
@@ -224,17 +225,32 @@ int main()
     // TODO: we will move the initialization logic to a constructor.
     Player player = Player(44, 22, 1.5, PLAYER_SIZE);
 
+    bn::vector<Enemy, 10> enemies;
+
     // Create a enemy and initialize it
     Enemy enemy = Enemy(-30, 22, 0.5, ENEMY_SIZE);
+
+    Enemy enemyTwo = Enemy(-30, 10, 0.5, ENEMY_SIZE);
+
+    Enemy enemyThree = Enemy(-30, 32, 0.5, ENEMY_SIZE);
+
+    enemies.push_back(enemy);
+    enemies.push_back(enemyTwo);
+    enemies.push_back(enemyThree);
+
 
     // bn::sprite_ptr enemy_sprite = bn::sprite_items::square.create_sprite(-30, 22);
     // bn::rect enemy_bounding_box = create_bounding_box(enemy_sprite, ENEMY_SIZE);
 
+   
+
     while (true)
     {
         player.update();
-        enemy.update(player);
 
+        for( Enemy opponent : enemies) {
+              opponent.update(player);
+        }
 
         // Reset the current score and player position if the player collides with enemy
         if (enemy.bounding_box.intersects(player.bounding_box))
