@@ -174,6 +174,7 @@ class Enemy {
         if (player.sprite.x() < sprite.x()) {
             sprite.set_x(sprite.x() - speed);
         }
+        // sets the enemy and user location to oppsite 
         if (player.sprite.y() > sprite.y()) {
             sprite.set_y(sprite.y() + speed);
         }
