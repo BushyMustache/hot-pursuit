@@ -182,12 +182,16 @@ class Enemy {
             sprite.set_y(sprite.y() - speed);
         }
 
-        if (player.sprite.x() == sprite.x() && player.sprite.y() == sprite.y()) {
+        bounding_box = create_bounding_box(sprite, size);
+
+        if (bounding_box.intersects(player.bounding_box)) {
+            while (player.sprite.x() == sprite.x() && player.sprite.y() == sprite.y()) {
+                random_x.update();
+                random_y.update();
+            }
             sprite.set_x(random_x.get_int(MIN_X, MAX_X));
             sprite.set_y(random_y.get_int(MIN_Y, MAX_Y));
         }
-
-        bounding_box = create_bounding_box(sprite, size);
     }
 
     bn::sprite_ptr sprite;
@@ -229,8 +233,10 @@ int main()
 
         // Update the scores and disaply them
         scoreDisplay.update();
+
         random_x.update();
         random_y.update();
+
         bn::core::update();
     }
 }
