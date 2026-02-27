@@ -32,7 +32,7 @@ static constexpr int SCORE_Y = -70;
 static constexpr int HIGH_SCORE_X = -70;
 static constexpr int HIGH_SCORE_Y = -70;
 
-// random position values for x and y
+// Random x and y values for the Enemy
 bn::random random_x = bn::random();
 bn::random random_y = bn::random();
 
@@ -145,6 +145,19 @@ class Player {
         }
 
         bounding_box = create_bounding_box(sprite, size);
+
+        if (sprite.x() < MIN_X) {
+            sprite.set_x(MIN_X);
+        }
+        if (sprite.x() > MAX_X) {
+            sprite.set_x(MAX_X);
+        }
+        if (sprite.y() < MIN_Y) {
+            sprite.set_y(MIN_Y);
+        }
+        if (sprite.y() > MAX_Y) {
+            sprite.set_y(MAX_Y);
+        }
     }
 
     // Create the sprite. This will be moved to a constructor
