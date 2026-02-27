@@ -10,6 +10,7 @@
 #include "common_fixed_8x16_font.h"
 #include "bn_sprite_items_dot.h"
 #include "bn_sprite_items_square.h"
+#include <bn_random.h>
 
 // Width and height of the the player bounding box
 static constexpr bn::size PLAYER_SIZE = {8, 8};
@@ -30,6 +31,11 @@ static constexpr int SCORE_Y = -70;
 // High score location
 static constexpr int HIGH_SCORE_X = -70;
 static constexpr int HIGH_SCORE_Y = -70;
+
+// random position values for x and y
+bn::random random_x = bn::random();
+bn::random random_y = bn::random();
+
 
 /**
  * Creates a rectangle centered at a sprite's location with a given size.
@@ -161,6 +167,7 @@ class Enemy {
      * Update the position and bounding box of the enemy based on the player's position
      */
     void update(Player& player) {
+        
         if (player.sprite.x() > sprite.x()) {
             sprite.set_x(sprite.x() + speed);
         }
@@ -172,6 +179,11 @@ class Enemy {
         }
         if (player.sprite.y() < sprite.y()) {
             sprite.set_y(sprite.y() - speed);
+        }
+
+        if (player.sprite.x() == sprite.x() && player.sprite.y() == sprite.y()) {
+            sprite.set_x(random_x.get_int(MIN_X, MAX_X));
+            sprite.set_y(random_y.get_int(MIN_Y, MAX_Y));
         }
 
         bounding_box = create_bounding_box(sprite, size);
@@ -205,6 +217,7 @@ int main()
         player.update();
         enemy.update(player);
 
+
         // Reset the current score and player position if the player collides with enemy
         if (enemy.bounding_box.intersects(player.bounding_box))
         {
@@ -215,7 +228,8 @@ int main()
 
         // Update the scores and disaply them
         scoreDisplay.update();
-
+        random_x.update();
+        random_y.update();
         bn::core::update();
     }
 }
