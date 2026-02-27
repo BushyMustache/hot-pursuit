@@ -217,7 +217,6 @@ int main()
 {
     bn::core::init();
 
-
     // Create a new score display
     ScoreDisplay scoreDisplay = ScoreDisplay();
 
@@ -238,29 +237,25 @@ int main()
     enemies.push_back(enemyTwo);
     enemies.push_back(enemyThree);
 
-
     // bn::sprite_ptr enemy_sprite = bn::sprite_items::square.create_sprite(-30, 22);
     // bn::rect enemy_bounding_box = create_bounding_box(enemy_sprite, ENEMY_SIZE);
-
-   
 
     while (true)
     {
         player.update();
         // for each loop to access enemies and updates
         for( Enemy opponent : enemies) {
-              opponent.update(player);
+            opponent.update(player);
 
-               if (opponent.bounding_box.intersects(player.bounding_box))
-        {
-            scoreDisplay.resetScore();
-            player.sprite.set_x(44);
-            player.sprite.set_y(22);
-        }
-        
+            // Reset the current score and player position if the player collides with enemy
+            if (opponent.bounding_box.intersects(player.bounding_box))
+            {
+                scoreDisplay.resetScore();
+                player.sprite.set_x(44);
+                player.sprite.set_y(22);
+            }
         }
 
-        // Reset the current score and player position if the player collides with enemy
         // if (enemy.bounding_box.intersects(player.bounding_box))
         // {
         //     scoreDisplay.resetScore();
