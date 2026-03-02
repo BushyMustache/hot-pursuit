@@ -258,8 +258,8 @@ int main()
 {
     bn::core::init();
 
-    // play music
-    bn::music_items::chasing_music.play();
+    // plays music
+    bn::music_items::background.play();
     bn::music::set_volume(0.1);
 
     // Create a new score display
@@ -286,6 +286,7 @@ int main()
     // bn::rect enemy_bounding_box = create_bounding_box(enemy_sprite, ENEMY_SIZE);
 
     while (true) {
+
 
         if (counter == 0 && enemies.size() < enemies.max_size()) {
             Enemy new_enemy = Enemy(initial_x.get_int(MIN_X, MAX_X), initial_y.get_int(MIN_Y, MAX_Y), 0.5, ENEMY_SIZE);
