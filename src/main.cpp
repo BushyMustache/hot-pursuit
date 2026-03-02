@@ -11,6 +11,7 @@
 #include "bn_sprite_items_dot.h"
 #include "bn_sprite_items_square.h"
 #include <bn_random.h>
+#include <bn_log.h>
 
 // Width and height of the the player bounding box
 static constexpr bn::size PLAYER_SIZE = {8, 8};
@@ -33,8 +34,14 @@ static constexpr int HIGH_SCORE_X = -70;
 static constexpr int HIGH_SCORE_Y = -70;
 
 // Random x and y values for the Enemy
+bn::random initial_x = bn::random();
+bn::random initial_y = bn::random();
+
 bn::random random_x = bn::random();
 bn::random random_y = bn::random();
+
+// Counter Variable
+int counter = 120;
 
 
 /**
@@ -198,7 +205,8 @@ class Enemy {
         bounding_box = create_bounding_box(sprite, size);
 
         if (bounding_box.intersects(player.bounding_box)) {
-            while (player.sprite.x() == sprite.x() && player.sprite.y() == sprite.y()) {
+            while (player.sprite.x() == random_x.get_int(MIN_X, MAX_X) 
+            && player.sprite.y() == random_x.get_int(MIN_Y, MAX_Y)) {
                 random_x.update();
                 random_y.update();
             }
@@ -229,27 +237,41 @@ int main()
     // Create a enemy and initialize it
     Enemy enemy = Enemy(-30, 22, 0.5, ENEMY_SIZE);
 
-    Enemy enemyTwo = Enemy(-30, 10, 0.5, ENEMY_SIZE);
+    // Enemy enemyTwo = Enemy(-30, 10, 0.5, ENEMY_SIZE);
 
-    Enemy enemyThree = Enemy(-30, 32, 0.5, ENEMY_SIZE);
+    // Enemy enemyThree = Enemy(-30, 32, 0.5, ENEMY_SIZE);
 
     enemies.push_back(enemy);
-    enemies.push_back(enemyTwo);
-    enemies.push_back(enemyThree);
+    // enemies.push_back(enemyTwo);
+    // enemies.push_back(enemyThree);
 
     // bn::sprite_ptr enemy_sprite = bn::sprite_items::square.create_sprite(-30, 22);
     // bn::rect enemy_bounding_box = create_bounding_box(enemy_sprite, ENEMY_SIZE);
 
-    while (true)
-    {
+    while (true) {
+
+        if (counter == 0 && enemies.size() < enemies.max_size()) {
+            Enemy new_enemy = Enemy(initial_x.get_int(MIN_X, MAX_X), initial_y.get_int(MIN_Y, MAX_Y), 0.5, ENEMY_SIZE);
+            enemies.push_back(Enemy(new_enemy));
+
+            initial_x.update();
+            initial_y.update();
+            counter = 120;
+        } else {
+            BN_LOG("Error: Couldn't generate new enemy");
+        }
+
+        if (counter > 0) {
+            counter -= 1;
+        }
+
         player.update();
         // for each loop to access enemies and updates
-        for( Enemy opponent : enemies) {
+        for (Enemy opponent : enemies) {
             opponent.update(player);
 
             // Reset the current score and player position if the player collides with enemy
-            if (opponent.bounding_box.intersects(player.bounding_box))
-            {
+            if (opponent.bounding_box.intersects(player.bounding_box)) {
                 scoreDisplay.resetScore();
                 player.sprite.set_x(44);
                 player.sprite.set_y(22);
@@ -263,7 +285,7 @@ int main()
         //     player.sprite.set_y(22);
         // }
 
-        // Update the scores and disaply them
+        // Update the scores and display them
         scoreDisplay.update();
 
         random_x.update();
