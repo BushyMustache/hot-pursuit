@@ -213,6 +213,35 @@ class Enemy {
             sprite.set_x(random_x.get_int(MIN_X, MAX_X));
             sprite.set_y(random_y.get_int(MIN_Y, MAX_Y));
         }
+
+    }
+
+    void bounce(Enemy& enemy) {
+
+        // variables for calcualting x and y coordinates 
+        bn::fixed dx = sprite.x() - enemy.sprite.x();
+        bn::fixed dy = sprite.y() - enemy.sprite.y();
+        // using pythagorean formula 
+        bn::fixed distance = sqrt(dx*dx + dy*dy);
+
+        if (distance < 10) {
+            // left
+            if (enemy.sprite.x() > sprite.x()) {
+                sprite.set_x(sprite.x() - speed);
+            }
+            // right
+            if (enemy.sprite.x() < sprite.x()) {
+                sprite.set_x(sprite.x() + speed);
+            }
+            // up
+            if (enemy.sprite.y() > sprite.y()) {
+                sprite.set_y(sprite.y() - speed);
+            }
+            // down
+            if (enemy.sprite.y() < sprite.y()) {
+                sprite.set_y(sprite.y() + speed);
+            }
+        }
     }
 
     bn::sprite_ptr sprite;
@@ -273,6 +302,10 @@ int main()
         // for each loop to access enemies and updates
         for (Enemy opponent : enemies) {
             opponent.update(player);
+
+            for (Enemy reference : enemies) {
+                opponent.bounce(reference);
+            }
 
             // Reset the current score and player position if the player collides with enemy
             if (opponent.bounding_box.intersects(player.bounding_box)) {
