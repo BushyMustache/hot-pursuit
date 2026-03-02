@@ -13,6 +13,10 @@
 #include <bn_random.h>
 #include <bn_log.h>
 
+#include <bn_music.h>
+#include "bn_music_items.h"
+
+
 // Width and height of the the player bounding box
 static constexpr bn::size PLAYER_SIZE = {8, 8};
 static constexpr bn::size ENEMY_SIZE = {8, 8};
@@ -253,6 +257,10 @@ class Enemy {
 int main()
 {
     bn::core::init();
+
+    // play music
+    bn::music_items::chasing_music.play();
+    bn::music::set_volume(0.1);
 
     // Create a new score display
     ScoreDisplay scoreDisplay = ScoreDisplay();
