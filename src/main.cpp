@@ -235,13 +235,13 @@ int main()
     bn::vector<Enemy, 10> enemies;
 
     // Create a enemy and initialize it
-    Enemy enemy = Enemy(-30, 22, 0.5, ENEMY_SIZE);
+    Enemy initial_enemy = Enemy(-30, 22, 0.5, ENEMY_SIZE);
 
     // Enemy enemyTwo = Enemy(-30, 10, 0.5, ENEMY_SIZE);
 
     // Enemy enemyThree = Enemy(-30, 32, 0.5, ENEMY_SIZE);
 
-    enemies.push_back(enemy);
+    enemies.push_back(initial_enemy);
     // enemies.push_back(enemyTwo);
     // enemies.push_back(enemyThree);
 
@@ -266,6 +266,10 @@ int main()
         }
 
         player.update();
+
+        bn::vector<Enemy, 10> trashBin;
+        bool hitOnce = true;
+
         // for each loop to access enemies and updates
         for (Enemy opponent : enemies) {
             opponent.update(player);
@@ -273,9 +277,26 @@ int main()
             // Reset the current score and player position if the player collides with enemy
             if (opponent.bounding_box.intersects(player.bounding_box)) {
                 scoreDisplay.resetScore();
+
                 player.sprite.set_x(44);
                 player.sprite.set_y(22);
+
+                if (hitOnce == true) {
+                    for (Enemy removed : enemies) {
+                        trashBin.push_back(removed);
+                    }
+                    hitOnce = false;
+                }
+
+                counter = 120;
             }
+        }
+
+        if (trashBin.size() > 0) {
+            for (int i = 0; i < trashBin.size(); i++) {
+                enemies.pop_back();
+            }
+            enemies.push_back(initial_enemy);
         }
 
         // if (enemy.bounding_box.intersects(player.bounding_box))
