@@ -3,11 +3,7 @@
 #include <bn_keypad.h>
 #include <bn_rect.h>
 #include <bn_size.h>
-#include <bn_string.h>
-#include <bn_sprite_ptr.h>
-#include <bn_sprite_text_generator.h>
 
-#include "common_fixed_8x16_font.h"
 #include "bn_sprite_items_dot.h"
 #include "bn_sprite_items_square.h"
 #include <bn_random.h>
@@ -15,6 +11,7 @@
 
 #include <bn_music.h>
 #include "bn_music_items.h"
+#include "ScoreDisplay.h"
 
 
 // Width and height of the the player bounding box
@@ -25,17 +22,6 @@ static constexpr int MIN_Y = -bn::display::height() / 2;
 static constexpr int MAX_Y = bn::display::height() / 2;
 static constexpr int MIN_X = -bn::display::width() / 2;
 static constexpr int MAX_X = bn::display::width() / 2;
-
-// Number of characters required to show two of the longest numer possible in an int (-2147483647)
-static constexpr int MAX_SCORE_CHARS = 22;
-
-// Score location
-static constexpr int SCORE_X = 70;
-static constexpr int SCORE_Y = -70;
-
-// High score location
-static constexpr int HIGH_SCORE_X = -70;
-static constexpr int HIGH_SCORE_Y = -70;
 
 // Random x and y values for the Enemy
 bn::random initial_x = bn::random();
@@ -61,65 +47,7 @@ bn::rect create_bounding_box(bn::sprite_ptr sprite, bn::size box_size)
                     box_size.height());
 }
 
-/**
- * Displays a score and high score.
- *
- * Score starts a 0 and is increased each time update is called, and reset to 0 when resetScore is
- * called. High score tracks the highest score ever reached.
- */
-class ScoreDisplay
-{
-public:
-    ScoreDisplay() : score(0),                                                    // Start score at 0
-        high_score(0),                                                            // Start high score at 0
-        score_sprites(bn::vector<bn::sprite_ptr, MAX_SCORE_CHARS>()),             // Start with empty vector for score sprites
-        text_generator(bn::sprite_text_generator(common::fixed_8x16_sprite_font)) // Use a new text generator
-    {
-    }
 
-    /**
-     * Increases score by 1 and updates high score if needed. Displays score and high score.
-     */
-    void update()
-    {
-        // increase score and update high score if this is the new highest
-        score++;
-        if (score > high_score)
-        {
-            high_score = score;
-        }
-
-        // Stop displaying previous scores
-        score_sprites.clear();
-
-        // Display new scores
-        show_number(SCORE_X, SCORE_Y, score);
-        show_number(HIGH_SCORE_X, HIGH_SCORE_Y, high_score);
-    }
-
-    /**
-     * Displays a number at the given position
-     */
-    void show_number(int x, int y, int number)
-    {
-        // Convert number to a string and then display it
-        bn::string<MAX_SCORE_CHARS> number_string = bn::to_string<MAX_SCORE_CHARS>(number);
-        text_generator.generate(x, y, number_string, score_sprites);
-    }
-
-    /**
-     * Sets score back to 0. Does NOT reset high score.
-     */
-    void resetScore()
-    {
-        score = 0;
-    }
-
-    int score;                                                 // current score
-    int high_score;                                            // best core
-    bn::vector<bn::sprite_ptr, MAX_SCORE_CHARS> score_sprites; // Sprites to display scores
-    bn::sprite_text_generator text_generator;                  // Text generator for scores
-};
 
 class Player {
     public:
@@ -272,7 +200,7 @@ int main()
     bn::vector<Enemy, 10> enemies;
 
     // Create a enemy and initialize it
-    Enemy initial_enemy = Enemy(-30, 22, 0.5, ENEMY_SIZE);
+    Enemy initial_enemy = Enemy(-30, 22, 0.7, ENEMY_SIZE);
 
     // Enemy enemyTwo = Enemy(-30, 10, 0.5, ENEMY_SIZE);
 
@@ -287,9 +215,8 @@ int main()
 
     while (true) {
 
-
         if (counter == 0 && enemies.size() < enemies.max_size()) {
-            Enemy new_enemy = Enemy(initial_x.get_int(MIN_X, MAX_X), initial_y.get_int(MIN_Y, MAX_Y), 0.5, ENEMY_SIZE);
+            Enemy new_enemy = Enemy(initial_x.get_int(MIN_X, MAX_X), initial_y.get_int(MIN_Y, MAX_Y), 0.7, ENEMY_SIZE);
             enemies.push_back(Enemy(new_enemy));
 
             initial_x.update();
