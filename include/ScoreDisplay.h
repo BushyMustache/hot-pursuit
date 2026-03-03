@@ -1,3 +1,6 @@
+#ifndef SCOREDISPLAY_H
+#define SCOREDISPLAY_H
+
 #include <bn_sprite_ptr.h>
 #include <bn_sprite_text_generator.h>
 #include <bn_string.h>
@@ -45,3 +48,5 @@ public:
     bn::vector<bn::sprite_ptr, MAX_SCORE_CHARS> score_sprites; // Sprites to display scores
     bn::sprite_text_generator text_generator;                  // Text generator for scores
 };
+
+#endif
